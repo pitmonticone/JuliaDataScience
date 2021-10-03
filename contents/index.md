@@ -7,7 +7,7 @@ This file is only included on the website.
 Welcome! This is an open source and open access book on how to do **Data Science using [Julia](https://julialang.org)**.
 Our target audience are researchers from all fields of applied sciences.
 Of course, we hope to be useful for industry too.
-You can navigate through the pages of ebook by using the arrow keys (left/right) on your keyboard.
+You can navigate through the pages of the ebook by using the arrow keys (left/right) on your keyboard.
 
 The book is also available as [**PDF**](/juliadatascience.pdf){target="_blank"}.
 
@@ -24,11 +24,21 @@ Roughly, the status is as follows:
 - [x] 4. DataFrames.jl
 - [ ] 5. Plots.jl
 - [x] 6. Makie.jl
-- [ ] 7. Statistics
+- [x] 7. Statistics
 - [ ] Review complete book
 - [ ] Publish with Amazon Kindle Direct Publishing
 
 For details about the status, see the [JuliaDataScience](https://github.com/JuliaDataScience/JuliaDataScience) GitHub repository.
+Or, **sign up for updates**:
+
+```{=html}
+<form style="margin: 0 auto;" action="https://api.staticforms.xyz/submit" method="post">
+    <input type="hidden" name="accessKey" value="2b78f325-fb4e-44e1-ad2f-4dc714ac402f">
+    <input type="email" name="email">
+    <input type="hidden" name="redirectTo" value="https://juliadatascience.io/thanks">
+    <input type="submit" value="Submit" />
+</form>
+```
 
 ### Roadmap {-}
 
@@ -36,7 +46,7 @@ Of course, data science is about more things than just tables, basic statistics 
 We want to cover more topics, but we have scheduled them for the second edition of the book.
 For now, the planned topics for the second edition are:
 
-- More statistics (probably, descriptive statistics, `Distributions.jl`)
+- More statistics
 - Plotting via `AlgebraOfGraphics.jl`.
 - Machine learning (probably, `MLJ.jl` and `Flux.jl`)
 - Bayesian statistics (`Turing.jl`)
@@ -61,20 +71,13 @@ Or in BibTeX format:
 }
 ```
 
-
-```{=comment}
-To generate these images, run `write_front_cover()`.
-```
-
-```{=comment}
 ### Front Cover {-}
 
-<center>
-    <a href="/im/front_cover.png">
-        <image src="/im/front_cover_thumbnail.png" alt="Book front cover">
-    </a><br/>
-
-    <i>Click to see the full size version.</i>
-</center>
+```jl
+let
+    fig = front_cover()
+    # Use lazy loading to keep homepage speed high.
+    link_attributes = "loading=\"lazy\" width=80%"
+    Options(fig; caption=nothing, label=nothing, link_attributes)
+end
 ```
-

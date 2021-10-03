@@ -7,6 +7,7 @@ using Reexport: @reexport
 
 @reexport begin
 using Books:
+    BUILD_DIR,
     @sc,
     @sco,
     Options,
@@ -45,7 +46,8 @@ using DataFrames:
     select,
     semijoin,
     subset,
-    transform
+    transform,
+    transform!
 using Dates
 using Distributions
 using Downloads
@@ -70,6 +72,7 @@ end # @reexport
 
 const SMALL_IM_ATTR = "width=70%"
 
+include("ci.jl")
 include("df.jl")
 include("environment.jl")
 include("showcode_additions.jl")
@@ -101,23 +104,9 @@ export plot_corr
 export plot_normal_lognormal, plot_discrete_continuous
 export plot_pmf, plot_pdf, plot_cdf
 export calculate_pdf
+export anscombe_quartet, plot_anscombe
 
 # Book cover.
 export compress_image, front_cover, write_front_cover
-
-"""
-    build()
-
-This method is called during CI.
-"""
-function build()
-    println("Building JDS")
-    gen(; fail_on_error=true)
-    write_front_cover()
-    extra_head = """
-    <script src="https://cdn.usefathom.com/script.js" data-site="EEJXHKTE" defer></script>
-    """
-    build_all(; extra_head, fail_on_error=true)
-end
 
 end # module
