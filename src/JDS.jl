@@ -1,73 +1,71 @@
 module JDS
 
 import Pkg
-import Plots
 
 using Reexport: @reexport
 
 @reexport begin
-using Books:
-    BUILD_DIR,
-    @sc,
-    @sco,
-    Options,
-    build_all,
-    catch_show,
-    clean_stacktrace,
-    code_block,
-    convert_output,
-    gen,
-    output_block,
-    sc,
-    sco,
-    scob,
-    serve,
-    without_caption_label
-using CSV
-using CairoMakie
-using CategoricalArrays
-using ColorSchemes
-using Colors
-using DataFrames:
-    ByRow,
-    DataFrame,
-    DataFrameRow,
-    Not,
-    antijoin,
-    combine,
-    crossjoin,
-    filter,
-    groupby,
-    innerjoin,
-    leftjoin,
-    outerjoin,
-    rightjoin,
-    select!,
-    select,
-    semijoin,
-    subset,
-    transform,
-    transform!
-using Dates
-using Distributions
-using Downloads
-using FileIO
-using GLMakie
-using GeometryBasics
-using InteractiveUtils
-using LaTeXStrings
-using LinearAlgebra
-using Makie
-using Random
-using Statistics
-using StatsBase:
-    mad,
-    mode
-using TestImages
-using XLSX:
-    eachtablerow,
-    readxlsx,
-    writetable
+    using Books:
+        BUILD_DIR,
+        @sc,
+        @sco,
+        Options,
+        build_all,
+        catch_show,
+        clean_stacktrace,
+        code_block,
+        convert_output,
+        gen,
+        output_block,
+        sc,
+        sco,
+        scob,
+        serve,
+        without_caption_label
+    using CSV
+    using CairoMakie
+    using CategoricalArrays
+    using ColorSchemes
+    using Colors
+    using DataFrames:
+        ByRow,
+        DataFrame,
+        DataFrameRow,
+        Not,
+        antijoin,
+        combine,
+        crossjoin,
+        filter,
+        groupby,
+        innerjoin,
+        leftjoin,
+        outerjoin,
+        rightjoin,
+        select!,
+        select,
+        semijoin,
+        subset,
+        transform,
+        transform!
+    using Dates
+    using Distributions
+    using Downloads
+    using FileIO
+    using GLMakie
+    using GeometryBasics
+    using InteractiveUtils
+    using LaTeXStrings
+    using LinearAlgebra
+    using Random: rand, randn, seed!
+    using Statistics
+    using StatsBase:
+        mad,
+        mode
+    using TestImages
+    using XLSX:
+        eachtablerow,
+        readxlsx,
+        writetable
 end # @reexport
 
 const SMALL_IM_ATTR = "width=70%"
@@ -76,7 +74,6 @@ include("ci.jl")
 include("df.jl")
 include("environment.jl")
 include("showcode_additions.jl")
-include("plots.jl")
 include("makie.jl")
 include("stats.jl")
 include("bezier.jl")
@@ -85,7 +82,7 @@ include("front-cover.jl")
 # Showcode additions.
 export sce, scsob, trim_last_n_lines, plainblock
 
-# Plots.
+# Makie.
 export publication_theme, plot_with_legend_and_colorbar
 export LaTeX_Strings, demo_themes, new_cycle_theme, scatters_and_lines
 export nested_sub_plot!, add_box_inset, add_axis_inset, peaks
@@ -107,6 +104,6 @@ export calculate_pdf
 export anscombe_quartet, plot_anscombe
 
 # Book cover.
-export compress_image, front_cover, write_front_cover
+export front_cover
 
 end # module

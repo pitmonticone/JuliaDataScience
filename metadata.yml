@@ -5,8 +5,8 @@ author:
   - Jose Storopoli
   - Rik Huijzer
   - Lazaro Alonso
-html-license: <a href="http://creativecommons.org/licenses/by-nc-sa/4.0/">CC BY-NC-SA 4.0</a>
-pdf-footer: "\\textbf{DRAFT} - See \\url{https://juliadatascience.io} for the latest version."
+html-license: '<a href="http://creativecommons.org/licenses/by-nc-sa/4.0/">CC BY-NC-SA 4.0</a>'
+pdf-footer: ""
 tex-license: Creative Commons Attribution-NonCommercial-ShareAlike 4.0 International
 lang: en-US
 tags: [JuliaLang, Data Science, Data Visualization, Data Manipulation, Data Analysis]
@@ -29,12 +29,15 @@ titlepage-top: >
   University of Groningen\\
   the Netherlands\\
   \\
-  Lázaro Alonso\\
-  Germany\\
+  Lazaro Alonso\\
+  Max Planck Institute for Biogeochemistry\\
+  Germany
   \end{tabular}
 
-titlepage-bottom: >
+titlepage-bottom: |
+  First edition published 2021
+
   \url{https://juliadatascience.io}
 
-dedication: "This book is dedicated to our families."
+  ISBN: 9798489859165
 ---

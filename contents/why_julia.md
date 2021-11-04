@@ -67,7 +67,6 @@ We have some examples in @sec:multiple_dispatch.
 Unlike traditional package managers, which install and manage a single global set of packages, Julia's package manager is designed around "environments":
 independent sets of packages that can be local to an individual project or shared between projects.
 Each project maintains its own independent set of package versions.
-We'll talk more about how to manage your projects and packages in the Appendix [-@sec:project_management].
 
 If we got your attention by exposing somewhat familiar or plausible situations, you might be interested to learn more about this newcomer called Julia.
 
@@ -109,14 +108,14 @@ For example, Python's `pandas` uses its own `Datetime` type to handle dates.
 The same with R tidyverse's `lubridate` package, which also defines its own `datetime` type to handle dates.
 Julia doesn't need any of this, it has all the date stuff already baked into its standard library.
 This means that other packages don't have to worry about dates.
-They just have to extend the Dates type to new functionalities by defining new functions and do not need to define new types.
+They just have to extend Julia's `DateTime` type to new functionalities by defining new functions and do not need to define new types.
 Julia's `Dates` module can do amazing stuff, but we are getting ahead of ourselves now.
 Let's talk about some other features of Julia.
 
 ### Julia Versus Other Programming Languages
 
 In [@fig:language_comparison], a highly opinionated representation is shown that divides the main open source and scientific computing languages in a 2x2 diagram with two axes:
-Slow-Fast and Easy-Hard.
+**Slow-Fast** and **Easy-Hard**.
 We've omitted closed source languages because there are many benefits to allowing other people to run your code for free as well as being able to inspect the source code in case of issues.
 
 We've put C++ and FORTRAN in the hard and fast quadrant.
@@ -138,7 +137,7 @@ We don't know any other serious language that would want to be hard and slow, so
 Very fast!**
 It was designed for speed from the beginning.
 It accomplishes this by multiple dispatch.
-Basically, the idea is to generate very efficient LLVM code.
+Basically, the idea is to generate very efficient LLVM[^LLVM] code.
 LLVM code, also known as LLVM instructions, are very low-level, that is, very close to the actual operations that your computer is executing.
 So, in essence, Julia converts your hand written and easy to read code to LLVM machine code which is very hard for humans to read, but easy for computers to read.
 For example, if you define a function taking one argument and pass an integer into the function, then Julia will create a _specialized_ `MethodInstance`.
@@ -182,209 +181,169 @@ This means no more using `sigma` or `sigma_i`, and instead just use $σ$ or $σ�
 When you see code for an algorithm or for a mathematical equation, you see almost the same notation and idioms.
 We call this feature **"One-To-One Code and Math Relation"** which is a powerful feature.
 
-We think that the "Two-Language problem" and the "One-To-One Code and Math Relation" are best described by one of the creators of Julia, Alan Edelman, in a TEDx Talk [@tedxtalksProgrammingLanguageHeal2020]
-(if you are reading the printed book, please check the citation; if you're reading the static PDF, please click on the link to go the video):
+We think that the "Two-Language problem" and the "One-To-One Code and Math Relation" are best described by one of the creators of Julia, Alan Edelman, in a [TEDx Talk](https://youtu.be/qGW0GT1rCvs) [@tedxtalksProgrammingLanguageHeal2020].
 
 <style>.embed-container { position: relative; padding-bottom: 56.25%; height: 0; overflow: hidden; max-width: 100%; } .embed-container iframe, .embed-container object, .embed-container embed { position: absolute; top: 0; left: 0; width: 100%; height: 100%; }</style><div class='embed-container'><iframe src='https://www.youtube.com/embed/qGW0GT1rCvs' frameborder='0' allowfullscreen></iframe></div>
 
 ### Multiple Dispatch {#sec:multiple_dispatch}
 
-To explain multiple dispatch, we'll give an illustrative example in **Python**.
-Suppose that you want to have different types of researcher that will inherit from a "base" class `Researcher`.
-The base class `Researcher` would define the initial common values for every derived class, namely `name` and `age`. These would go inside the default constructor method `__init__`:
-
-```python
-class Researcher:
-    def __init__(self, name: str, age: int):
-        self.name = name
-        self.age = age
-```
-
-Now let us define a `Linguist` class that will inherit from the `Researcher` class.
-We will also define a method `citation` that returns the citation style that is mostly used in the linguistics research field.
-
-```python
-class Linguist(Researcher):
-    def citation(self):
-        return "APA"
-```
-
-We do the same for the `ComputerScientist` class, but with a different citation style:
-
-```python
-class ComputerScientist(Researcher):
-   def citation(self):
-       return "IEEE"
-```
-
-Finally, let's instantiate our two researchers, [Noam Chomsky](https://en.wikipedia.org/wiki/Noam_Chomsky) a linguist and [Judea Pearl](https://en.wikipedia.org/wiki/Judea_Pearl) a computer scientist with their respective ages:
-
-```python
-noam = Linguist("Noam Chomsky", 92)
-judea = ComputerScientist("Judea Pearl", 84)
-```
-
-Now, suppose you want to define a function that will have *different behaviors* depending on the *argument's types*.
-For example, a linguistics researcher might approach a computer scientist researcher and ask them to collaborate on a new paper.
-The approach would be different if the situation were the opposite: a computer scientist researcher approaching the linguistics researcher.
-Below, you'll see that we defined two functions that should behave differently in both approaches:
-
-```python
-def approaches(li: Linguist, cs: ComputerScientist):
-   print(f"Hey {cs.name}, wanna do a paper together? We need to use {li.citation()} style.")
-
-def approaches(cs:ComputerScientist, li: Linguist):
-    print(f"Hey {li.name}, wanna do a paper together? We need to use {cs.citation()} style.")
-```
-
-Now let's say Noam Chomsky approaches Judea Pearl with a paper idea:
-
-```python
-approaches(noam, judea)
-```
-
-```plaintext
-Hey Judea Pearl, wanna do a paper? We need to use APA style.
-```
-
-That was not what `judea` as a `Linguist` type would say to `noam`, a `ComputerScientist` type.
-This is **single dispatch** and is the default feature available on most object-oriented languages, like Python or C++.
-Single dispatch just acts on the first argument of a function.
-Since both of our researchers `noam` and `judea` are instantiated as types inherited from the same base type `Researcher` we cannot implement what we are trying to do in Python.
-You would need to change your approach with a substantial loss of simplicity.
-Specifically, you would probably need to create different functions with different names.
-
-**Now, let's do this in Julia**.
-
-In Julia, we don't have classes but we have structures (`struct`) that are meant to be "structured data".
-They define the kind of information that is embedded in the structure, that is, a set of fields (i.e. "properties" or "attributes" in other languages), and then individual instances (or "objects") can be produced each with its own specific values for the fields defined by the structure.
-They differ from the primitive types (e.g. `Int64` and `Float64`) that are defined in the core of the Julia language.
-Thus, they are known as user-defined types.
-The user can only create new `abstract type`s or `struct`s.
-These are known as composite types.
-In Julia, all `struct`s are final and may only have `abstract type`s as their supertypes.
-
-First we'll create an `abstract type` named `Researcher`.
-
-```jl
-s = "abstract type Researcher end"
-sc(s)
-```
-
-We proceed, similarly as before, by creating two derived `struct`s from the `Researcher` abstract type.
-Note that the `<:` operator is the subtype operator to assign that a `struct` or `type` is a subtype of another `struct` or `type`, which, in turn, would become a supertype (and we have the analogous `>:` operator).
-Next, we create two field names, one for the researcher `name` and the other for `age`.
-They are represented as strings and 64-bit integers, respectively:
+Multiple dispatch is a powerful feature that allows us to extend existing functions or to define custom and complex behavior for new types.
+Suppose that you want to define two new `struct`s to denote two different animals:
 
 ```jl
 s = """
-    struct Linguist <: Researcher
-        name::AbstractString
-        age::Int64
+    abstract type Animal end
+    struct Fox <: Animal
+        weight::Float64
+    end
+    struct Chicken <: Animal
+        weight::Float64
     end
     """
 sc(s)
 ```
 
+Basically, this says "define a fox which is an animal" and "define a chicken which is an animal".
+Next, we might have one fox called Fiona and a chicken called Big Bird.
+
 ```jl
 s = """
-    struct ComputerScientist <: Researcher
-        name::AbstractString
-        age::Int64
+    fiona = Fox(4.2)
+    big_bird = Chicken(2.9)
+    """
+sc(s)
+```
+
+Next, we want to know how much they weight together, for which we can write a function:
+
+```jl
+sco("combined_weight(A1::Animal, A2::Animal) = A1.weight + A2.weight")
+```
+
+And we want to know whether they go well together.
+One way to implement that is to use conditionals:
+
+```jl
+s = """
+    function naive_trouble(A::Animal, B::Animal)
+        if A isa Fox && B isa Chicken
+            return true
+        elseif A isa Chicken && B isa Fox
+            return true
+        elseif A isa Chicken && B isa Chicken
+            return false
+        end
     end
     """
-sc(s)
+sco(s)
 ```
 
-The final step is to define two new functions that will behave differently depending on which derived `struct` of `Researcher` are the first or second argument.
-We also use `$` for string interpolation of the researcher's `name`:
+Now, let's see whether leaving Fiona and Big Bird together would give trouble:
+
+```jl
+scob("naive_trouble(fiona, big_bird)")
+```
+
+Okay, so this sounds right.
+Writing the `naive_trouble` function seems to be easy enough. However, using multiple dispatch to create a new function `trouble` can have their benefits. Let's create our new function as follows:
 
 ```jl
 s = """
-    approaches(li::Linguist, cs::ComputerScientist) = "Hey \$(cs.name), wanna do a paper? We need to use APA style."
-
-    approaches(cs::ComputerScientist, li::Linguist) = "Hey \$(li.name), wanna do a paper? We need to use IEEE style."
+    trouble(F::Fox, C::Chicken) = true
+    trouble(C::Chicken, F::Fox) = true
+    trouble(C1::Chicken, C2::Chicken) = false
     """
 sco(s)
 ```
 
-Finally, let's instantiate our two researchers, `noam` and `judea`, as we did before in the Python case:
+After defining these methods, `trouble` gives the same result as `naive_trouble`.
+For example:
+
+```jl
+scob("trouble(fiona, big_bird)")
+```
+
+And leaving Big Bird alone with another chicken called Dora is also fine
 
 ```jl
 s = """
-    noam = Linguist("Noam Chomsky", 92)
-    judea = ComputerScientist("Judea Pearl", 84)
-    """
-sc(s)
-```
-
-Again, let's see what Noam Chomsky will say when he approaches Judea Pearl with an idea for a paper:
-
-```jl
-s = "approaches(noam, judea)"
-sco(s)
-```
-
-Perfect! It behaves just as we wanted!
-This is **multiple dispatch** and it is an important feature in Julia.
-Multiple dispatch acts on all arguments of a function and defines function behavior based on all argument's types.
-
----
-
-Multiple dispatch is a powerful feature that also allows us to extend existing functions or to define custom and complex behavior for new types.
-To show how this works, we'll use another example.
-Suppose that you want to define two new `struct`s for two different animals.
-For simplicity, we won't be adding fields for the `struct`s:
-
-```jl
-s = """
-    struct fox end
-    struct chicken end
-    """
-sc(s)
-```
-
-Next, we want to define addition for both the `fox` and `chicken` types.
-We proceed by defining a new function signature of the `+` operator from the `Base` module of Julia[^invs]:
-
-[^invs]: this is an example for teaching purposes. Doing something similar to this example will result in many method invalidations (see <https://julialang.org/blog/2020/08/invalidations/> for details) and is, therefore, not a good idea.
-
-```jl
-s = """
-    import Base: +
-    +(F::fox, C::chicken) = "trouble"
-    +(C1::chicken, C2::chicken) = "safe"
-    """
-sco(s)
-```
-
-Now, let's call addition with the `+` sign on instantiated `fox` and `chicken` objects:
-
-```jl
-scob(
-"""
-my_fox = fox()
-my_chicken = chicken()
-my_fox + my_chicken
-"""
-)
-```
-
-And, as expected, adding two `chicken` objects together signals that they are safe:
-
-```jl
-s = """
-    chicken_1 = chicken()
-    chicken_2 = chicken()
-    chicken_1 + chicken_2
+    dora = Chicken(2.2)
+    trouble(dora, big_bird)
     """
 scob(s)
 ```
 
----
+So, in this case, the benefit of multiple dispatch is that you can just declare types and Julia will find the correct method for your types.
+Even more so, for many cases when multiple dispatch is used inside code, the Julia compiler will actually optimize the function calls away.
+For example, we could write:
 
-This is the power of multiple dispatch:
-**we don't need everything from scratch for our custom-defined user types**.
+```
+function trouble(A::Fox, B::Chicken, C::Chicken)
+    return trouble(A, B) || trouble(B, C) || trouble(C, A)
+end
+```
+
+Depending on the context, Julia can optimize this to:
+
+```
+function trouble(A::Fox, B::Chicken, C::Chicken)
+    return true || false || true
+end
+```
+
+because the compiler **knows** that `A` is a Fox, `B` is a chicken and so this can be replaced by the contents of the method `trouble(F::Fox, C::Chicken)`.
+The same holds for `trouble(C1::Chicken, C2::Chicken)`.
+Next, the compiler can optimize this to:
+
+```
+function trouble(A::Fox, B::Chicken, C::Chicken)
+    return true
+end
+```
+
+Another benefit of multiple dispatch is that when someone else now comes by and wants to compare the existing animals to their animal, a Zebra, then that's possible.
+In their package, they can define a Zebra:
+
+```jl
+s = """
+    struct Zebra <: Animal
+        weight::Float64
+    end
+    """
+sc(s)
+```
+
+and also how the interactions with the existing animals would go:
+
+```jl
+s = """
+    trouble(F::Fox, Z::Zebra) = false
+    trouble(Z::Zebra, F::Fox) = false
+    trouble(C::Chicken, Z::Zebra) = false
+    trouble(Z::Zebra, F::Fox) = false
+    """
+sco(s)
+```
+
+Now, we can see whether Marty (our zebra) is safe with Big Bird:
+
+```jl
+s = """
+    marty = Zebra(412)
+    trouble(big_bird, marty)
+    """
+scob(s)
+```
+
+Even better, we can also calculate **the combined weight of zebra's and other animals without defining any extra function at our side**:
+
+```jl
+scob("combined_weight(big_bird, marty)")
+```
+
+So, in summary, the code that was written with only Fox and Chicken in mind works even for types that it **has never seen before**!
+In practise, this means that Julia makes it often easy to re-use code from other projects.
+
 If you are excited as much as we are by multiple dispatch, here are two more in-depth examples.
 The first is a [fast and elegant implementation of a one-hot vector](https://storopoli.io/Bayesian-Julia/pages/1_why_Julia/#example_one-hot_vector) by @storopoli2021bayesianjulia.
 The second is an interview with [Christopher Rackauckas](https://www.chrisrackauckas.com/) at [Tanmay Bakshi YouTube's Channel](https://youtu.be/moyPIhvw4Nk?t=2107) (see from time 35:07 onwards) [@tanmaybakshiBakingKnowledgeMachine2021].
@@ -393,9 +352,11 @@ Chris was quite surprised by this request since he would never have expected tha
 He was even more surprised to discover that the user made a small mistake and that it all worked.
 Most of the merit is due to multiple dispatch and high user code/type sharing.
 
-To conclude, we think that multiple dispatch is best explained by one of the creators of Julia, [Stefan Karpinski, at JuliaCon 2019](https://youtu.be/kc9HwsxE1OY) [@thejuliaprogramminglanguageJuliaCon2019Unreasonable2019] (if you are reading the printed book, please check the citation; if you're reading the static PDF, please click on the link to go the video):
+To conclude, we think that multiple dispatch is best explained by one of the creators of Julia:
+[Stefan Karpinski at JuliaCon 2019](https://youtu.be/kc9HwsxE1OY).
 
 <style>.embed-container { position: relative; padding-bottom: 56.25%; height: 0; overflow: hidden; max-width: 100%; } .embed-container iframe, .embed-container object, .embed-container embed { position: absolute; top: 0; left: 0; width: 100%; height: 100%; }</style><div class='embed-container'><iframe src='https://www.youtube.com/embed/kc9HwsxE1OY' frameborder='0' allowfullscreen></iframe></div>
+
 
 ## Julia in the Wild {#sec:julia_wild}
 
@@ -412,9 +373,11 @@ Previous solutions used Matlab to develop the algorithms and C++ for a fast impl
 Now, FAA is using one language to do all this: Julia.
 4. [**175x speedup** for Pfizer's pharmacology models using GPUs in Julia](https://juliacomputing.com/case-studies/pfizer/).
 It was presented as a [poster](https://chrisrackauckas.com/assets/Posters/ACoP11_Poster_Abstracts_2020.pdf) in the 11th American Conference of Pharmacometrics (ACoP11) and [won a quality award](https://web.archive.org/web/20210121164011/https://www.go-acop.org/abstract-awards).
-5. [The Attitude and Orbit Control Subsystem (AOCS) of the Brazilian satellite Amazonia-1 is **written 100% in Julia**](https://discourse.julialang.org/t/julia-and-the-satellite-amazonia-1/57541) by [Ronan Arraes Jardim Chagas](https://ronanarraes.com/)
+5. [The Attitude and Orbit Control Subsystem (AOCS) of the Brazilian satellite Amazonia-1 is **written 100% in Julia**](https://discourse.julialang.org/t/julia-and-the-satellite-amazonia-1/57541) by Ronan Arraes Jardim Chagas (<https://ronanarraes.com/>).
 6. [Brazil's national development bank (BNDES) ditched a paid solution and opted for open-source Julia modeling and gained a **10x speedup**.](https://youtu.be/NY0HcGqHj3g)
 
 If this is not enough, there are more case studies in [Julia Computing website](https://juliacomputing.com/case-studies/).
 
 [^readable]: no C++ or FORTRAN API calls.
+[^LLVM]: LLVM stands for **L**ow **L**evel **V**irtual **M**achine, you can find more at the LLVM website (<http://llvm.org>).
+

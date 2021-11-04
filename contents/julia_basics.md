@@ -25,7 +25,7 @@ Also, you don't need to explicitly specify each type.
 Julia will guess types for you on the go.
 
 The main differences between Julia and other dynamic languages such as R and Python are the following.
-First, Julia, contrary to R, **allows the user to specify type declarations**.
+First, Julia **allows the user to specify type declarations**.
 You already saw some types declarations in *Why Julia?* (@sec:why_julia): they are those double colons `::` that sometimes come after variables.
 However, if you don't want to specify the type of your variables or functions, Julia will gladly infer (guess) them for you.
 
@@ -43,7 +43,7 @@ Julia has several types of variables but, in data science, we mostly use:
 * Boolean: `Bool`
 * Strings: `String`
 
-Integers and real numbers have 64 bits by default, that's why they have the `64` suffix in the name of the type.
+Integers and real numbers are stored by using 64 bits by default, that's why they have the `64` suffix in the name of the type.
 If you need more or less precision, there are `Int8` or `Int128` types, for example, where higher means more precision.
 Most of the time, this won't be an issue so you can just stick to the defaults.
 
@@ -68,7 +68,7 @@ scob("name")
 
 If you want to define new values for an existing variable, you can repeat the steps in the assignment.
 Note that Julia will now override the previous value with the new one.
-Supposed, `jl name`'s birthday has passed and now it has turned `jl age+1`:
+Supposed, Julia's birthday has passed and now it has turned 10:
 
 ```jl
 scob("age = 10")
@@ -85,7 +85,7 @@ scob(s)
 ```
 
 We can also do operations on variables such as addition or division.
-Let's see how old `jl name` is, in months, by multiplying `age` by 12:
+Let's see how old Julia is, in months, by multiplying `age` by 12:
 
 ```jl
 s = "12 * age"
@@ -321,7 +321,7 @@ sco("methods(round_number)")
 There is one issue: what happens if we want to round a 32-bit float `Float32`?
 Or a 8-bit integer `Int8`?
 
-If you want something to function on all float and integer types, you can use an abstract type as the type signature, such as `AbstractFloat` or `Integer`:
+If you want something to function on all float and integer types, you can use an **abstract type** as the type signature, such as `AbstractFloat` or `Integer`:
 
 ```jl
 s = """
@@ -350,7 +350,7 @@ This is an example of multiple dispatch.
 We will extend the `Base.show` function that prints the output of instantiated types and `struct`s.
 
 By default, a `struct` has a basic output, which you saw above in the `python` case.
-We can define `Base.show` function to our `Language` type, so that we have some nice printing for our programming languages instances.
+We can define a new `Base.show` method to our `Language` type, so that we have some nice printing for our programming languages instances.
 We want to clearly communicate programming languages' names, titles, and ages in years.
 The function `Base.show` accepts as arguments a `IO` type named `io` followed by the type you want to define custom behavior:
 
@@ -413,7 +413,6 @@ In that case, we can do two things:
 
 Some functions can accept keyword arguments instead of positional arguments.
 These arguments are just like regular arguments, except that they are defined after the regular function's arguments and separated by a semicolon `;`.
-Another difference is that we must supply a **default value** for every keyword argument.
 For example, let's define a `logarithm` function that by default uses base $e$ (2.718281828459045) as a keyword argument.
 Note that, here, we are using the abstract type `Real` so that we cover all types derived from `Integer` and `AbstractFloat`, being both themselves subtypes of `Real`:
 
@@ -430,7 +429,7 @@ s = """
 sco(s)
 ```
 
-It works without specifying the `base` argument:
+It works without specifying the `base` argument as we supplied a **default argument value** in the function declaration:
 
 ```jl
 scob("logarithm(10)")
@@ -450,7 +449,7 @@ scob(s)
 Often we don't care about the name of the function and want to quickly make one.
 What we need are **anonymous functions**.
 They are used a lot in Julia's data science workflow.
-For example, when using `DataFrames.jl` (@sec:dataframes) or `Plots.jl` (@sec:DataVisualizationPlots), sometimes we need a temporary function to filter data or format plot labels.
+For example, when using `DataFrames.jl` (@sec:dataframes) or `Makie.jl` (@sec:DataVisualizationMakie), sometimes we need a temporary function to filter data or format plot labels.
 That's when we use anonymous functions.
 They are especially useful when we don't want to create a function, and a simple in-place statement would be enough.
 
@@ -783,38 +782,38 @@ scob(s)
 
 2. `lowercase`, `uppercase`, `titlecase` and `lowercasefirst`:
 
-    ```jl
-    scob("lowercase(julia_string)")
-    ```
+     ```jl
+     scob("lowercase(julia_string)")
+     ```
 
-    ```jl
-    scob("uppercase(julia_string)")
-    ```
+     ```jl
+     scob("uppercase(julia_string)")
+     ```
 
-    ```jl
-    scob("titlecase(julia_string)")
-    ```
+     ```jl
+     scob("titlecase(julia_string)")
+     ```
 
-    ```jl
-    scob("lowercasefirst(julia_string)")
-    ```
+     ```jl
+     scob("lowercasefirst(julia_string)")
+     ```
 
 3. `replace`: introduces a new syntax, called the `Pair`
 
-    ```jl
-    scob("""replace(julia_string, "amazing" => "awesome")""")
-    ```
+     ```jl
+     scob("""replace(julia_string, "amazing" => "awesome")""")
+     ```
 
 4. `split`: breaks up a string by a delimiter:
 
-    ```jl
-    sco("""split(julia_string, " ")""")
-    ```
+     ```jl
+     sco("""split(julia_string, " ")""")
+     ```
 
 #### String Conversions {#sec:string_conversions}
 
-Often, we need to convert between types in Julia.
-We can use the `string` function:
+Often, we need to **convert** between types in Julia.
+To convert a number to a string we can use the `string` function:
 
 ```jl
 s = """
@@ -939,7 +938,7 @@ sco(s)
 
 ### Ranges {#sec:ranges}
 
-A range in Julia represents an interval between start and stop boundaries.
+A **range** in Julia represents an interval between start and stop boundaries.
 The syntax is `start:stop`:
 
 ```jl
@@ -972,28 +971,28 @@ For example, suppose we want a range of `Float64` from 0 to 1 with steps of size
 sco("0.0:0.2:1.0")
 ```
 
-If you want to "materialize" a `UnitRange` into a collection, you can use the function `collect`:
+If you want to "materialize" a range into a collection, you can use the function `collect`:
 
 ```jl
 sco("collect(1:10)")
 ```
 
-We have an array of the type specified in the `UnitRange` between the boundaries that we've set.
+We have an array of the type specified in the range between the boundaries that we've set.
 Speaking of arrays, let's talk about them.
 
 ### Array {#sec:array}
 
-In its most basic form, arrays hold multiple objects.
+In its most basic form, **array**s hold multiple objects.
 For example, they can hold multiple numbers in one-dimension:
 
 ```jl
-myarray = [1, 2, 3]
+sco("myarray = [1, 2, 3]")
 ```
 
 Most of the time you would want **arrays of a single type for performance issues**, but note that they can also hold objects of different types:
 
 ```jl
-myarray = ["text", 1, :symbol]
+sco("myarray = [\"text\", 1, :symbol]"; process=output_block)
 ```
 
 They are the "bread and butter" of data scientist, because arrays are what underlies most of **data manipulation** and **data visualization** workflows.
@@ -1002,7 +1001,7 @@ Therefore, **Arrays are an essential data structure**.
 
 #### Array Types {#sec:array_types}
 
-Let's start with array types.
+Let's start with **array types**.
 There are several, but we will focus on the two most used in data science:
 
 * `Vector{T}`: **one-dimensional** array. Alias for `Array{T, 1}`.
@@ -1017,7 +1016,7 @@ But, we can use the handy aliases `Vector` and `Matrix` for clear and concise sy
 
 #### Array Construction {#sec:array_construction}
 
-How do we construct an array?
+How do we **construct** an array?
 In this section, we start by constructing arrays in a low-level way.
 This can be necessary to write high performing code in some situations.
 However, in most situations, this is not necessary, and we can safely use more convenient methods to create arrays.
@@ -1050,35 +1049,35 @@ We also have some **syntax aliases** for the most common elements in array const
 * `zeros` for all elements being initialized to zero.
   Note that the default type is `Float64` which can be changed if necessary:
 
-    ```jl
-    s = """
-        my_vector_zeros = zeros(10)
-        """
-    sco(s)
-    ```
+     ```jl
+     s = """
+         my_vector_zeros = zeros(10)
+         """
+     sco(s)
+     ```
 
-    ```jl
-    s = """
-        my_matrix_zeros = zeros(Int64, 10, 2)
-        """
-    sco(s)
-    ```
+     ```jl
+     s = """
+         my_matrix_zeros = zeros(Int64, 10, 2)
+         """
+     sco(s)
+     ```
 
 * `ones` for all elements being initialized to one:
 
-    ```jl
-    s = """
-        my_vector_ones = ones(Int64, 10)
-        """
-    sco(s)
-    ```
+     ```jl
+     s = """
+         my_vector_ones = ones(Int64, 10)
+         """
+     sco(s)
+     ```
 
-    ```jl
-    s = """
-        my_matrix_ones = ones(10, 2)
-        """
-    sco(s)
-    ```
+     ```jl
+     s = """
+         my_matrix_ones = ones(10, 2)
+         """
+     sco(s)
+     ```
 
 For other elements, we can first instantiate an array with `undef` elements and use the `fill!` function to fill all elements of an array with the desired element.
 Here's an example with `3.14` ($\pi$):
@@ -1151,7 +1150,7 @@ sco(s)
 Another powerful way to create an array is to write an **array comprehension**.
 This way of creating arrays is better in most cases: it avoids loops, indexing, and other error-prone operations.
 You specify what you want to do inside the `[]` brackets.
-For example, say we want to create a vector of squares from 1 to 100:
+For example, say we want to create a vector of squares from 1 to 10:
 
 ```jl
 s = """
@@ -1202,29 +1201,29 @@ And, we can concatenate arrays to create new arrays:
 
 * `cat`: concatenate input arrays along a specific dimension `dims`
 
-    ```jl
-    sco("cat(ones(2), zeros(2), dims=1)")
-    ```
+     ```jl
+     sco("cat(ones(2), zeros(2), dims=1)")
+     ```
 
-    ```jl
-    sco("cat(ones(2), zeros(2), dims=2)")
-    ```
+     ```jl
+     sco("cat(ones(2), zeros(2), dims=2)")
+     ```
 
 * `vcat`: vertical concatenation, a shorthand for `cat(...; dims=1)`
 
-    ```jl
-    sco("vcat(ones(2), zeros(2))")
-    ```
+     ```jl
+     sco("vcat(ones(2), zeros(2))")
+     ```
 
 * `hcat`: horizontal concatenation, a shorthand for `cat(...; dims=2)`
 
-    ```jl
-    sco("hcat(ones(2), zeros(2))")
-    ```
+     ```jl
+     sco("hcat(ones(2), zeros(2))")
+     ```
 
 #### Array Inspection {#sec:array_inspection}
 
-Once we have arrays, the next logical step is to inspect them.
+Once we have arrays, the next logical step is to **inspect** them.
 There are a lot of handy functions that allow the user to have an insight into any array.
 
 It is most useful to know what **type of elements** are inside an array.
@@ -1234,34 +1233,34 @@ We can do this with `eltype`:
 sco("eltype(my_matrix_π)")
 ```
 
-After knowing its types, one might be interested in array dimensions.
+After knowing its types, one might be interested in **array dimensions**.
 Julia has several functions to inspect array dimensions:
 
 * `length`: total number of elements
 
-    ```jl
-    scob("length(my_matrix_π)")
-    ```
+     ```jl
+     scob("length(my_matrix_π)")
+     ```
 
 * `ndims`: number of dimensions
 
-    ```jl
-    scob("ndims(my_matrix_π)")
-    ```
+     ```jl
+     scob("ndims(my_matrix_π)")
+     ```
 
 * `size`: this one is a little tricky.
     By default it will return a tuple containing the array's dimensions.
 
-    ```jl
-    sco("size(my_matrix_π)")
-    ```
+     ```jl
+     sco("size(my_matrix_π)")
+     ```
 
     You can get a specific dimension with a second argument to `size`.
     Here, the the second axis is columns
 
-    ```jl
-    scob("size(my_matrix_π, 2)")
-    ```
+     ```jl
+     scob("size(my_matrix_π, 2)")
+     ```
 
 #### Array Indexing and Slicing {#sec:array_indexing}
 
@@ -1282,7 +1281,7 @@ s = """
 sc(s)
 ```
 
-Let's first see an example with vectors.
+Let's start with vectors.
 Suppose that you want the second element of a vector.
 You append `[]` brackets with the desired **index** inside:
 
@@ -1298,7 +1297,7 @@ Let's retrieve the element from the second row (first dimension) and first colum
 scob("my_example_matrix[2, 1]")
 ```
 
-Julia also has conventional keywords for the first and last elements of an array: `begin` and `end`.
+Julia also has conventional keywords for the **first** and **last** elements of an array: `begin` and `end`.
 For example, the second to last element of a vector can be retrieved as:
 
 ```jl
@@ -1322,7 +1321,7 @@ sco("my_example_vector[2:4]")
 ```
 
 We could do the same with matrices.
-Particularly with matrices if we want to select all elements in a following dimension we can do so with just a colon `:`.
+Particularly with matrices if we want to select **all elements** in a following dimension we can do so with just a colon `:`.
 For example, to get all the elements in the second row:
 
 ```jl
@@ -1339,7 +1338,7 @@ sco("my_example_matrix[begin+1:end, end]")
 
 #### Array Manipulations {#sec:array_manipulation}
 
-There are several ways we could manipulate an array.
+There are several ways we could **manipulate** an array.
 The first would be to manipulate a **singular element of the array**.
 We just index the array by the desired element and proceed with an assignment `=`:
 
@@ -1478,7 +1477,7 @@ empty_vector
 )
 ```
 
-Sometimes you don't want to loop over each element, but actually over each array index.
+Sometimes, you don't want to loop over each element, but actually over each array index.
 **We can use the `eachindex` function combined with a `for` loop to iterate over each array index**.
 
 Again, let's show an example with a vector:
@@ -1486,11 +1485,11 @@ Again, let's show an example with a vector:
 ```jl
 sco(
 """
-forty_two_vector = [42, 42, 42]
+forty_twos = [42, 42, 42]
 
 empty_vector = Int64[]
 
-for i in eachindex(forty_two_vector)
+for i in eachindex(forty_twos)
     push!(empty_vector, i)
 end
 
@@ -1499,150 +1498,141 @@ empty_vector
 )
 ```
 
-In this example the `eachindex(forty_two_vector)` iterator inside the `for` loop returns not `forty_two_vector`'s values but its indices: `[1, 2, 3]`.
+In this example, the `eachindex(forty_twos)` returns the indices of `forty_twos`, namely `[1, 2, 3]`.
 
-Iterating over matrices involves more details.
+Similarly, we can iterate over matrices.
 The standard `for` loop goes first over columns then over rows.
 It will first traverse all elements in column 1, from the first row to the last row, then it will move to column 2 in a similar fashion until it has covered all columns.
 
-For those familiar with other programming languages: Julia, like most scientific programming languages, is "column-major".
-This means that arrays are stored contiguously using a column orientation.
-If at any time you are seeing performance problems and there is an array `for` loop involved, chances are that you are mismatching Julia's native column-major storage orientation.
+For those familiar with other programming languages:
+Julia, like most scientific programming languages, is "column-major".
+Column-major means that the elements in the column are stored next to each other in memory[^pointers].
+This also means that iterating over elements in a column is much quicker than over elements in a row.
+
+[^pointers]: or, that the memory address pointers to the elements in the column are stored next to each other
 
 Ok, let's show this in an example:
 
 ```jl
 sc(
 """
-column_major = [[1 2]
-                [3 4]]
+column_major = [[1 3]
+                [2 4]]
 
-row_major = [[1 3]
-             [2 4]]
+row_major = [[1 2]
+             [3 4]]
 """
 )
 ```
 
+If we loop over the vector stored in column-major order, then the output is sorted:
+
 ```jl
 sco(
 """
-empty_vector = Int64[]
+indexes = Int64[]
 
 for i in column_major
-    push!(empty_vector, i)
+    push!(indexes, i)
 end
 
-empty_vector
+indexes
 """
 )
 ```
+
+However, the output isn't sorted when looping over the other matrix:
 
 ```jl
 sco(
 """
-empty_vector = Int64[]
+indexes = Int64[]
 
 for i in row_major
-    push!(empty_vector, i)
+    push!(indexes, i)
 end
 
-empty_vector
+indexes
 """
 )
 ```
 
-There are some handy functions to iterate over matrices.
+It is often better to use specialized functions for these loops:
 
 * `eachcol`: iterates over an array column first
 
-    ```jl
-    sco(
-    """
-    first(eachcol(column_major))
-    """
-    )
-    ```
+     ```jl
+     sco("first(eachcol(column_major))")
+     ```
 
 * `eachrow`: iterates over an array row first
 
-    ```jl
-    sco(
-    """
-    first(eachrow(column_major))
-    """
-    )
-    ```
+     ```jl
+     sco("first(eachrow(column_major))")
+     ```
 
 ### Pair {#sec:pair}
 
 Compared to the huge section on arrays, this section on pairs will be brief.
-**`Pair` is a data structure that holds two types**.
+**`Pair` is a data structure that holds two objects** (which typically belong to each other).
 We construct a pair in Julia using the following syntax:
 
 ```jl
-sco(
-"""
-my_pair = Pair("Julia", 42)
-"""
-)
-```
-
-Alternatively, we can create a pair by specifying both values and in between we use the pair `=>` operator:
-
-```jl
-sco(
-"""
-my_pair = "Julia" => 42
-"""
-)
+sco("""my_pair = "Julia" => 42""")
 ```
 
 The elements are stored in the fields `first` and `second`.
 
 ```jl
-scob(
-"""
-my_pair.first
-"""
-)
+scob("my_pair.first")
 ```
 
 ```jl
-scob(
-"""
-my_pair.second
-"""
-)
+scob("my_pair.second")
 ```
 
-Pairs will be used a lot in data manipulation and data visualization since both `DataFrames.jl` (@sec:dataframes) or `Plots.jl` (@sec:DataVisualizationPlots) main functions depends on `Pair` as type arguments.
+But, in most cases, it's easier use `first` and `last`[^easier]:
+
+```jl
+scob("first(my_pair)")
+```
+
+```jl
+scob("last(my_pair)")
+```
+
+[^easier]: it is easier because `first` and `last` also work on many other collections, so you need to remember less.
+
+Pairs will be used a lot in data manipulation and data visualization since both `DataFrames.jl` (@sec:dataframes) or `Makie.jl` (@sec:DataVisualizationMakie) take objects of type `Pair` in their main functions.
+For example, with `DataFrames.jl` we're going to see that `:a => :b` can be used to rename the column `:a` to `:b`.
 
 ### Dict {#sec:dict}
 
 If you understood what a `Pair` is, then `Dict` won't be a problem.
-**`Dict` in Julia is just a "hash table" with pairs of `key` and `value`**.
-`key`s and `value`s can be of any type, but generally you'll see `key`s as strings.
+For all practical purposes, **`Dict`s are mappings from keys to values**.
+By mapping, we mean that if you give a `Dict` some key, then the `Dict` can tell you which value belongs to that key.
+`key`s and `value`s can be of any type, but usually `key`s are strings.
 
 There are two ways to construct `Dict`s in Julia.
-The first is using the **default constructor `Dict` and passing a vector of tuples composed of `(key, value)`**:
+The first is by passing a vector of tuples as `(key, value)` to the `Dict` constructor:
 
 ```jl
 sco(
 """
-my_dict = Dict([("one", 1), ("two", 2)])
+# tuples # hide
+name2number_map = Dict([("one", 1), ("two", 2)])
 """
 )
 ```
 
-We *prefer* a second way of constructing `Dict`s.
-It offers a much more elegant and expressive syntax.
-You use the same **default constructor `Dict`**, but now you pass **`pair`s of `key` and `value`**:
-
+There is a more readable syntax based on the `Pair` type described above.
+You can also pass `Pair`s of `key => value`s to the `Dict` constructor:
 
 ```jl
 sco(
 """
-my_dict = Dict("one" => 1, "two" => 2)
+# pairs # hide
+name2number_map = Dict("one" => 1, "two" => 2)
 """
 )
 ```
@@ -1650,31 +1640,23 @@ my_dict = Dict("one" => 1, "two" => 2)
 You can retrieve a `Dict`s `value` by indexing it by the corresponding `key`:
 
 ```jl
-scob(
-"""
-my_dict["one"]
-"""
-)
+scob("""name2number_map["one"]""")
 ```
 
-Similarly, to add a new entry you index the `Dict` by the desired `key` and assign a `value` with the assignment `=` operator:
+To add a new entry, you index the `Dict` by the desired `key` and assign a `value` with the assignment `=` operator:
 
 ```jl
 scob(
 """
-my_dict["three"] = 3
+name2number_map["three"] = 3
 """
 )
 ```
 
-If you want to check if a `Dict` has a certain `key` you can use the `haskey` function:
+If you want to check if a `Dict` has a certain `key` you can use `keys` and `in`:
 
 ```jl
-scob(
-"""
-haskey(my_dict, "two")
-"""
-)
+scob("\"two\" in keys(name2number_map)")
 ```
 
 To delete a `key` you can use either the `delete!` function:
@@ -1682,45 +1664,29 @@ To delete a `key` you can use either the `delete!` function:
 ```jl
 sco(
 """
-delete!(my_dict, "three")
+delete!(name2number_map, "three")
 """
 )
 ```
 
-Or to delete a `key` while returning its `value` you can use the `pop!` function:
+Or, to delete a key while returning its value, you can use `pop!`:
 
 ```jl
-scob(
-"""
-popped_value = pop!(my_dict, "two")
-"""
-)
+scob("""popped_value = pop!(name2number_map, "two")""")
 ```
 
-Now our `my_dict` has only one `key`:
+Now, our `name2number_map` has only one `key`:
 
 ```jl
-scob(
-"""
-length(my_dict)
-"""
-)
+sco("name2number_map")
 ```
 
-```jl
-sco(
-"""
-my_dict
-"""
-)
-```
-
-`Dict`s are also used for data manipulation by `DataFrames.jl` (@sec:dataframes) and for data visualization by `Plots.jl` (@sec:DataVisualizationPlots).
+`Dict`s are also used for data manipulation by `DataFrames.jl` (@sec:dataframes) and for data visualization by `Makie.jl` (@sec:DataVisualizationMakie).
 So, it is important to know their basic functionality.
 
-There is one useful `Dict` constructor that we use a lot.
-Suppose you have two vectors and you want to construct a `Dict` with one of them as `key`s and the other as `value`s.
-You can do that with the `zip` function which "glues" together two objects just like a zipper:
+There is another useful way of constructing `Dict`s.
+Suppose that you have two vectors and you want to construct a `Dict` with one of them as `key`s and the other as `value`s.
+You can do that with the `zip` function which "glues" together two objects (just like a zipper):
 
 ```jl
 sco(
@@ -1728,7 +1694,7 @@ sco(
 A = ["one", "two", "three"]
 B = [1, 2, 3]
 
-dic = Dict(zip(A, B))
+name2number_map = Dict(zip(A, B))
 """
 )
 ```
@@ -1736,11 +1702,7 @@ dic = Dict(zip(A, B))
 For instance, we can now get the number 3 via:
 
 ```jl
-scob(
-"""
-dic["three"]
-"""
-)
+scob("""name2number_map["three"]""")
 ```
 
 ### Symbol {#sec:symbol}
@@ -1750,43 +1712,35 @@ It is a type and behaves a lot like a string.
 Instead of surrounding the text by quotation marks, a symbol starts with a colon (:) and can contain underscores:
 
 ```jl
-sco("""
-sym = :some_text
-""")
+sco("sym = :some_text")
 ```
 
-Since symbols and strings are so similar, we can easily convert a symbol to string and vice versa:
+We can easily convert a symbol to string and vice versa:
 
 ```jl
-scob("""
-s = string(sym)
-""")
+scob("s = string(sym)")
 ```
 
 ```jl
-sco("""
-sym = Symbol(s)
-""")
+sco("sym = Symbol(s)")
 ```
 
 One simple benefit of symbols is that you have to type one character less, that is, `:some_text` versus `"some text"`.
-We use `Symbol`s a lot in data manipulations with the `DataFrames.jl` package (@sec:dataframes) and data visualizations (@sec:DataVisualizationPlots and -@sec:DataVisualizationMakie).
+We use `Symbol`s a lot in data manipulations with the `DataFrames.jl` package (@sec:dataframes) and data visualizations with the `Makie.jl` package (@sec:DataVisualizationMakie).
 
 ### Splat Operator {#sec:splat}
 
-In Julia we have the "splat" operator `...` which is mainly used in function calls as a **sequence of arguments**.
+In Julia we have the "splat" operator `...` which is used in function calls as a **sequence of arguments**.
 We will occasionally use splatting in some function calls in the **data manipulation** and **data visualization** chapters.
 
 The most intuitive way to learn about splatting is with an example.
 The `add_elements` function below takes three arguments to be added together:
 
 ```jl
-sco("""
-add_elements(a, b, c) = a + b + c
-""")
+sco("add_elements(a, b, c) = a + b + c")
 ```
 
-Now suppose that we have a collection with three elements.
+Now, suppose that we have a collection with three elements.
 The naïve way to this would be to supply the function with all three elements as function arguments like this:
 
 ```jl
@@ -1800,18 +1754,16 @@ add_elements(my_collection[1], my_collection[2], my_collection[3])
 Here is where we use the "splat" operator `...` which takes a collection (often an array, vector, tuple, or range) and converts it into a sequence of arguments:
 
 ```jl
-scob("""
-add_elements(my_collection...) # and splat!
-""")
+scob("add_elements(my_collection...)")
 ```
 
 The `...` is included after the collection that we want to "splat" into a sequence of arguments.
-In the example above, syntactically speaking, the following are the same:
+In the example above, the following are the same:
 
-```julia
-collection = [x, y, z]
-
-function(collection...) = function(x, y, z)
+```jl
+scob("""
+add_elements(my_collection...) == add_elements(my_collection[1], my_collection[2], my_collection[3])
+""")
 ```
 
 Anytime Julia sees a splatting operator inside a function call, it will be converted on a sequence of arguments for all elements of the collection separated by commas.
@@ -1819,93 +1771,86 @@ Anytime Julia sees a splatting operator inside a function call, it will be conve
 It also works for ranges:
 
 ```jl
-scob("""
-add_elements(1:3...) # and splat!
-""")
+scob("add_elements(1:3...)")
 ```
-
 
 ## Filesystem {#sec:filesystem}
 
 In data science, most projects are undertaken in a collaborative effort.
 We share code, data, tables, figures and so on.
-Behind everything, there is the **operational system (OS) filesystem**.
-In an ideal world, code would run the *same* in *different* OS.
-But that is not what actually happens.
+Behind everything, there is the **operating system (OS) filesystem**.
+In a perfect world, the same program would give the **same** output when running on **different** operating systems.
+Unfortunately, that is not always the case.
 One instance of this is the difference between Windows paths, such as `C:\\user\john\`, and Linux paths, such as `/home/john`.
 This is why it is important to discuss **filesystem best practices**.
 
-Julia has native filesystem capabilities that can **handle all different OS demands**.
+Julia has native filesystem capabilities that **handle the differences between operating systems**.
 They are located in the [`Filesystem`](https://docs.julialang.org/en/v1/base/file/) module from the core `Base` Julia library.
-This means that Julia provides everything you need to make your code perform flawlessly in any OS that you want to.
 
-Whenever you are dealing with files such as CSV, Excel files or other Julia scripts, make sure that your code is compliant with all different OS filesystems.
-This is easily accomplished with the `joinpath` and `pwd` functions.
+Whenever you are dealing with files such as CSV, Excel files or other Julia scripts, make sure that your code **works on different OS filesystems**.
+This is easily accomplished with the `joinpath`, `@__FILE__` and `pkgdir` functions.
 
-The `pwd` function is an acronym for **p**rint **w**orking **d**irectory and it returns a string containing the current working directory.
-One nice thing about `pwd` is that it will return the correct string in Linux, MacOS, Windows, or any other OS.
-For example, let's see what our current directory is and record it in a variable `root`:
+If you write your code in a package, you can use `pkgdir` to get the root directory of the package.
+For example, for the Julia Data Science (JDS) package that we use to produce this book:
 
 ```jl
-scob(
-"""
-root = pwd()
-"""
-)
+root = pkgdir(JDS)
 ```
+
+as you can see, the code to produce this book was running on a Linux computer.
+If you're using a script, you can get the location of the script file via
+
+```julia
+root = dirname(@__FILE__)
+```
+
+The nice thing about these two commands is that they are independent of how the user started Julia.
+In other words, it doesn't matter whether the user started the program with `julia scripts/script.jl` or `julia script.jl`, in both cases the paths are the same.
 
 The next step would be to include the relative path from `root` to our desired file.
 Since different OS have different ways to construct relative paths with subfolders (some use forward slashes `/` while other might use backslashes `\`), we cannot simply concatenate the  file's relative path with the `root` string.
 For that, we have the `joinpath` function, which will join different relative paths and filenames according to your specific OS filesystem implementation.
 
-Suppose you have a script named `my_script.jl` inside your project's directory.
+Suppose that you have a script named `my_script.jl` inside your project's directory.
 You can have a robust representation of the filepath to `my_script.jl` as:
 
 ```jl
-scob(
-"""
-joinpath(root, "my_script.jl")
-"""
-)
+scob("""joinpath(root, "my_script.jl")""")
 ```
 
-`joinpath` also handles subfolders.
+`joinpath` also handles **subfolders**.
 Let's now imagine a common situation where you have a folder named `data/` in your project's directory.
 Inside this folder there is a CSV file named `my_data.csv`.
 You can have the same robust representation of the filepath to `my_data.csv` as:
 
 ```jl
-scob(
-"""
-joinpath(root, "data", "my_data.csv")
-"""
-)
+scob("""joinpath(root, "data", "my_data.csv")""")
 ```
 
-Always make sure that your code can run anywhere.
-It's a good habit to pick up, because it's very likely to save problems later.
+It's a good habit to pick up, because it's very likely to save problems for you or other people later.
 
 ## Julia Standard Library {#sec:standardlibrary}
 
-Julia has a rich standard library that ships with *every* Julia installation.
-Contrary to everything that we have seen so far, e.g. types, data structures and filesystem; you **must import standard library modules into your environment** to use a particular module or function.
+Julia has a **rich standard library** that is available with *every* Julia installation.
+Contrary to everything that we have seen so far, e.g. types, data structures and filesystem; you **must load standard library modules into your environment** to use a particular module or function.
 
-This is done with the `using` keyword:
+This is done via `using` or `import`.
+In this book, we will load code via `using`:
 
 ```julia
 using ModuleName
 ```
 
-Now you can access all functions and types inside `ModuleName`.
+After doing this, you can access all functions and types inside `ModuleName`.
 
 ### Dates {#sec:dates}
 
 Knowing how to handle dates and timestamps is important in data science.
-As we said in *Why Julia?* (@sec:why_julia) section, Python's `pandas` uses its own `Datetime` type to handle dates.
+As we said in *Why Julia?* (@sec:why_julia) section, Python's `pandas` uses its own `datetime` type to handle dates.
 The same is true in the R tidyverse's `lubridate` package, which also defines its own `datetime` type to handle dates.
-Julia doesn't need any of this, because it has all the **date stuff already baked into its standard library, in a module named `Dates`**.
+In Julia packages don't need to write their own dates logic, because Julia has a dates module in its standard library called `Dates`.
 
-To begin, let's import the `Dates` module:
+To begin, let's load the `Dates` module:
 
 ```julia
 using Dates
@@ -1915,7 +1860,7 @@ using Dates
 
 The `Dates` standard library module has **two types for working with dates**:
 
-1. `Date`: representing time in days; and
+1. `Date`: representing time in days and
 2. `DateTime`: representing time in millisecond precision.
 
 We can construct `Date` and `DateTime` with the default constructor either by specifying an integer to represent year, month, day, hours and so on:
@@ -1931,7 +1876,7 @@ Date(1987) # year
 ```jl
 sco(
 """
-Date(1987, 9) # month
+Date(1987, 9) # year, month
 """
 )
 ```
@@ -1939,7 +1884,7 @@ Date(1987, 9) # month
 ```jl
 sco(
 """
-Date(1987, 9, 13) # day
+Date(1987, 9, 13) # year, month, day
 """
 )
 ```
@@ -1947,7 +1892,7 @@ Date(1987, 9, 13) # day
 ```jl
 sco(
 """
-DateTime(1987, 9, 13, 21) # hour
+DateTime(1987, 9, 13, 21) # year, month, day, hour
 """
 )
 ```
@@ -1955,68 +1900,47 @@ DateTime(1987, 9, 13, 21) # hour
 ```jl
 sco(
 """
-DateTime(1987, 9, 13, 21, 21) # minute
+DateTime(1987, 9, 13, 21, 21) # year, month, day, hour, minute
 """
 )
 ```
 
 For the curious, September 13th 1987, 21:21 is the official time of birth of the first author, Jose.
 
-
 We can also pass `Period` types to the default constructor.
 **`Period` types are the human-equivalent representation of time** for the computer.
 Julia's `Dates` have the following `Period` abstract subtypes:
 
 ```jl
-sco(
-"""
-subtypes(Period)
-"""
-)
+sco("subtypes(Period)")
 ```
 
 which divide into the following concrete types, and they are pretty much self-explanatory:
 
 ```jl
-sco(
-"""
-subtypes(DatePeriod)
-"""
-)
+sco("subtypes(DatePeriod)")
 ```
 
 ```jl
-sco(
-"""
-subtypes(TimePeriod)
-"""
-)
+sco("subtypes(TimePeriod)")
 ```
 
-So we could alternatively construct Jose's official time of birth as:
+So, we could alternatively construct Jose's official time of birth as:
 
 ```jl
-sco(
-"""
-DateTime(Year(1987), Month(9), Day(13), Hour(21), Minute(21))
-"""
-)
+sco("DateTime(Year(1987), Month(9), Day(13), Hour(21), Minute(21))")
 ```
 
 #### Parsing Dates {#sec:dates_parsing}
 
-Most of the time we won't be constructing `Date` or `DateTime` instances from scratch.
+Most of the time, we won't be constructing `Date` or `DateTime` instances from scratch.
 Actually, we will probably be **parsing strings as `Date` or `DateTime` types**.
 
 The `Date` and `DateTime` constructors can be fed a string and a format string.
 For example, the string `"19870913"` representing September 13th 1987 can be parsed with:
 
 ```jl
-sco(
-"""
-Date("19870913", "yyyymmdd")
-"""
-)
+sco("""Date("19870913", "yyyymmdd")""")
 ```
 
 Notice that the second argument is a string representation of the format.
@@ -2025,37 +1949,28 @@ We have the first four digits representing year `y`, followed by two digits for 
 It also works for timestamps with `DateTime`:
 
 ```jl
-sco(
-"""
-DateTime("1987-09-13T21:21:00", "yyyy-mm-ddTHH:MM:SS")
-"""
-)
+sco("""DateTime("1987-09-13T21:21:00", "yyyy-mm-ddTHH:MM:SS")""")
 ```
 
 You can find more on how to specify different date formats in the [Julia `Dates`' documentation](https://docs.julialang.org/en/v1/stdlib/Dates/#Dates.DateFormat).
-Don't worry if you have to revisit it all the time, we ourselves have to do it all the time when working with dates and timestamps.
+Don't worry if you have to revisit it all the time, we ourselves do that too when working with dates and timestamps.
 
 According to [Julia `Dates`' documentation](https://docs.julialang.org/en/v1/stdlib/Dates/#Constructors), using the `Date(date_string, format_string)` method is fine if it's only called a few times.
 If there are many similarly formatted date strings to parse, however, it is much more efficient to first create a `DateFormat` type, and then pass it instead of a raw format string.
-So our previous example would become:
+Then, our previous example becomes:
 
 ```jl
-sco(
-"""
-format = DateFormat("yyyymmdd")
-Date("19870913", format)
-"""
-)
+s = """
+    format = DateFormat("yyyymmdd")
+    Date("19870913", format)
+    """
+sco(s)
 ```
 
 Alternatively, without loss of performance, you can use the string literal prefix `dateformat"..."`:
 
 ```jl
-sco(
-"""
-Date("19870913", dateformat"yyyymmdd")
-"""
-)
+sco("""Date("19870913", dateformat"yyyymmdd")""")
 ```
 
 #### Extracting Date Information {#sec:dates_information}
@@ -2064,89 +1979,49 @@ It is easy to **extract desired information from `Date` and `DateTime` objects**
 First, let's create an instance of a very special date:
 
 ```jl
-sco(
-"""
-my_birthday = Date("1987-09-13")
-"""
-)
+sco("""my_birthday = Date("1987-09-13")""")
 ```
 
 We can extract anything we want from `my_birthday`:
 
 ```jl
-scob(
-"""
-year(my_birthday)
-"""
-)
+scob("year(my_birthday)")
 ```
 
 ```jl
-scob(
-"""
-month(my_birthday)
-"""
-)
+scob("month(my_birthday)")
 ```
 
 ```jl
-scob(
-"""
-day(my_birthday)
-"""
-)
+scob("day(my_birthday)")
 ```
 
 Julia's `Dates` module also has **compound functions that return a tuple of values**:
 
 ```jl
-sco(
-"""
-yearmonth(my_birthday)
-"""
-)
+sco("yearmonth(my_birthday)")
 ```
 
 ```jl
-sco(
-"""
-monthday(my_birthday)
-"""
-)
+sco("monthday(my_birthday)")
 ```
 
 ```jl
-sco(
-"""
-yearmonthday(my_birthday)
-"""
-)
+sco("yearmonthday(my_birthday)")
 ```
 
 We can also see the day of the week and other handy stuff:
 
 ```jl
-scob(
-"""
-dayofweek(my_birthday)
-"""
-)
+scob("dayofweek(my_birthday)")
 ```
 
 ```jl
-scob(
-"""
-dayname(my_birthday)
-"""
-)
+scob("dayname(my_birthday)")
 ```
 
 ```jl
-scob(
-"""
-dayofweekofmonth(my_birthday) # second sunday
-"""
-)
+scob("dayofweekofmonth(my_birthday)")
 ```
 
 Yep, Jose was born on the second Sunday of September.
@@ -2154,7 +2029,7 @@ Yep, Jose was born on the second Sunday of September.
 > **_NOTE:_**
 > Here's a handy tip to just recover weekdays from `Dates` instances.
 > Just use a `filter` on `dayofweek(your_date) <= 5`.
-> For business day you can check the package [`BusinessDays.jl`](https://github.com/JuliaFinance/BusinessDays.jl).
+> For business day you can checkout the [`BusinessDays.jl`](https://github.com/JuliaFinance/BusinessDays.jl) package.
 
 #### Date Operations {#sec:dates_operations}
 
@@ -2163,138 +2038,106 @@ For example, we can add days to a `Date` or `DateTime` instance.
 Notice that Julia's `Dates` will automatically perform the adjustments necessary for leap years, and for months with 30 or 31 days (this is known as *calendrical* arithmetic).
 
 ```jl
-sco(
-"""
-my_birthday + Day(90)
-"""
-)
+sco("my_birthday + Day(90)")
 ```
 
 We can add as many as we like:
 
 ```jl
-sco(
-"""
-my_birthday + Day(90) + Month(2) + Year(1)
-"""
-)
+sco("my_birthday + Day(90) + Month(2) + Year(1)")
 ```
 
-To get **date duration**, we just use the **subtraction** `-` operator.
+In case you're ever wondering: "What can I do with dates again? What is available?", then you can use `methodswith` to check it out.
+We show only the first 20 results here:
+
+```jl
+s = "first(methodswith(Date), 20)"
+sco(s; process=catch_show)
+```
+
+From this, we can conclude that we can also use the plus `+` and minus `-` operator.
 Let's see how old Jose is, in days:
 
 ```jl
-sco(
-"""
-today() - my_birthday
-"""
-)
+sco("today() - my_birthday")
 ```
 
 The **default duration** of `Date` types is a `Day` instance.
 For the `DateTime`, the default duration is `Millisecond` instance:
 
 ```jl
-sco(
-"""
-DateTime(today()) - DateTime(my_birthday)
-"""
-)
+sco("DateTime(today()) - DateTime(my_birthday)")
 ```
 
 #### Date Intervals {#sec:dates_intervals}
 
-One nice thing about `Dates` module is that we can also easily construct date and time intervals.
+One nice thing about `Dates` module is that we can also easily construct **date and time intervals**.
 Julia is clever enough to not have to define the whole interval types and operations that we covered in @sec:ranges.
-It just extends the functions and operations defined for `UnitRange` to `Date`'s types.
-This is known as multiple dispatch and we already covered this in *Why Julia?*(@sec:why_julia).
+It just extends the functions and operations defined for range to `Date`'s types.
+This is known as multiple dispatch and we already covered this in *Why Julia?* (@sec:why_julia).
 
-For example suppose you want to create a `Day` interval.
+For example, suppose that you want to create a `Day` interval.
 This is easy done with the colon `:` operator:
 
 ```jl
-sco(
-"""
-Date("2021-01-01"):Day(1):Date("2021-01-07")
-"""
-)
+sco("""Date("2021-01-01"):Day(1):Date("2021-01-07")""")
 ```
 
 There is nothing special in using `Day(1)` as the interval, we can **use whatever `Period` type** as interval.
 For example, using 3 days as the interval:
 
 ```jl
-sco(
-"""
-Date("2021-01-01"):Day(3):Date("2021-01-07")
-"""
-)
+sco("""Date("2021-01-01"):Day(3):Date("2021-01-07")""")
 ```
 
 Or even months:
 
 ```jl
-sco(
-"""
-Date("2021-01-01"):Month(1):Date("2021-03-01")
-"""
-)
+sco("""Date("2021-01-01"):Month(1):Date("2021-03-01")""")
 ```
 
 Note that the **type of this interval is a `StepRange` with the `Date` and concrete `Period` type** we used as interval inside the colon `:` operator:
 
 ```jl
-sco(
-"""
-my_date_interval = Date("2021-01-01"):Month(1):Date("2021-03-01")
-typeof(my_date_interval)
-"""
-)
+s = """
+    date_interval = Date("2021-01-01"):Month(1):Date("2021-03-01")
+    typeof(date_interval)
+    """
+sco(s)
 ```
 
 We can convert this to a **vector** with the `collect` function:
 
 ```jl
-sco(
-"""
-my_date_interval_vector = collect(my_date_interval)
-"""
-)
+sco("collected_date_interval = collect(date_interval)")
 ```
 
 And have all the **array functionalities available**, like, for example, indexing:
 
 ```jl
-sco(
-"""
-my_date_interval_vector[end]
-"""
-)
+sco("collected_date_interval[end]")
 ```
 
 We can also **broadcast date operations** to our vector of `Date`s:
 
 ```jl
-sco(
-"""
-my_date_interval_vector .+ Day(10)
-"""
-)
+sco("collected_date_interval .+ Day(10)")
 ```
 
-All we've done with `Date` types can be extended to `DateTime` types in the same manner.
+Similarly, these examples work for `DateTime` types too.
 
 ### Random Numbers {#sec:random}
 
 Another important module in Julia's standard library is the `Random` module.
 This module deals with **random number generation**.
 `Random` is a rich library and, if you're interested, you should consult [Julia's `Random` documentation](https://docs.julialang.org/en/v1/stdlib/Random/).
-We will cover *only* three functions: `seed!`, `rand` and `randn`.
+We will cover *only* three functions: `rand`, `randn` and `seed!`.
 
-To begin, we first import the `Random` module:
+To begin, we first load the `Random` module.
+Since we know exactly what we want to load, we can just as well explicitly load the methods that we want to use:
 
 ```julia
-using Random
+using Random: rand, randn, seed!
 ```
 
 We have **two main functions that generate random numbers**:
@@ -2304,90 +2147,58 @@ We have **two main functions that generate random numbers**:
 
 > **_NOTE:_**
 > Note that those two functions are already in the Julia `Base` module.
-> So you don't need to import `Random` if you planning to use them
+> So, you don't need to import `Random` if you're planning to use them.
 
 #### `rand` {#sec:random_rand}
 
-By default if you call `rand` without arguments it will return a `Float64` in the interval $[0, 1)$, which means between 0 inclusive to 1 exclusive:
+By default, if you call `rand` without arguments it will return a `Float64` in the interval $[0, 1)$, which means between 0 inclusive to 1 exclusive:
 
 ```jl
-scob(
-"""
-rand()
-"""
-)
+scob("rand()")
 ```
 
 You can modify `rand` arguments in several ways.
 For example, suppose you want more than 1 random number:
 
 ```jl
-sco(
-"""
-rand(3)
-"""
-)
+sco("rand(3)")
 ```
 
-Or you want a different interval:
+Or, you want a different interval:
 
 ```jl
-scob(
-"""
-rand(1.0:10.0)
-"""
-)
+scob("rand(1.0:10.0)")
 ```
 
 You can also specify a different step size inside the interval and a different type.
-Here we are using numbers without the `.` so Julia will interpret them as `Int64`:
+Here we are using numbers without the dot `.` so Julia will interpret them as `Int64`:
 
 ```jl
-scob(
-"""
-rand(2:2:20)
-"""
-)
+scob("rand(2:2:20)")
 ```
 
 You can also mix and match arguments:
 
 ```jl
-sco(
-"""
-rand(2:2:20, 3)
-"""
-)
+sco("rand(2:2:20, 3)")
 ```
 
 It also supports a collection of elements as a tuple:
 
 ```jl
-scob(
-"""
-rand((42, "Julia", 3.14))
-"""
-)
+scob("""rand((42, "Julia", 3.14))""")
 ```
 
 And also arrays:
 
 ```jl
-scob(
-"""
-rand([1, 2, 3])
-"""
-)
+scob("rand([1, 2, 3])")
 ```
 
 `Dict`s:
 
 ```jl
-sco(
-"""
-rand(Dict("one"=>1, "two"=>2))
-"""
-)
+sco("rand(Dict(:one => 1, :two => 2))")
 ```
 
 To finish off all the `rand` arguments options, you can specify the desired random number dimensions in a tuple.
@@ -2395,103 +2206,71 @@ If you do this, the returned type will be an array.
 For example, here's a 2x2 matrix of `Float64` numbers between 1.0 and 3.0:
 
 ```jl
-sco(
-"""
-rand(1.0:3.0, (2, 2))
-"""
-)
+sco("rand(1.0:3.0, (2, 2))")
 ```
 
 #### `randn` {#sec:random_randn}
 
-`randn` follows the same general principle from `rand` but now it only returns numbers generated from the standard normal distribution.
+`randn` follows the same general principle from `rand` but now it only returns numbers generated from the **standard normal distribution**.
 The standard normal distribution is the normal distribution with mean 0 and standard deviation 1.
 The default type is `Float64` and it only allows for subtypes of `AbstractFloat` or `Complex`:
 
 ```jl
-scob(
-"""
-randn()
-"""
-)
+scob("randn()")
 ```
 
 We can only specify the size:
 
 ```jl
-sco(
-"""
-randn((2, 2))
-"""
-)
+sco("randn((2, 2))")
 ```
 
 #### `seed!` {#sec:random_seed}
 
 To finish off the `Random` overview, let's talk about **reproducibility**.
-Often, we want to make something replicable.
-Meaning that, we want the random number generator to generate the same random sequence of numbers,
-despite how paradoxical that might sound...
-We can do so with the `seed!` function.
-
-Let me show you an example of a `rand` that generates the same three numbers given a certain seed:
+Often, we want to make something **replicable**.
+Meaning that, we want the random number generator to generate the **same random sequence of numbers**.
+We can do so with the `seed!` function:
 
 ```jl
-sco(
-"""
-Random.seed!(123)
-rand(3)
-"""
-)
+s = """
+    seed!(123)
+    rand(3)
+    """
+sco(s)
 ```
 
 ```jl
-sco(
-"""
-Random.seed!(123)
-rand(3)
-"""
-)
+s = """
+    seed!(123)
+    rand(3)
+    """
+sco(s)
 ```
-
-Note that `seed!` is not automatically exported by the `Random` module.
-We have to call it with the `Module.function` syntax.
 
 In order to avoid tedious and inefficient repetition of `seed!` all over the place, we can instead define an instance of a `seed!` and pass it as a first argument of **either `rand` or `randn`**.
 
 ```jl
-sco(
-"""
-my_seed = Random.seed!(123)
-"""
-)
+sco("my_seed = seed!(123)")
 ```
 
 
 ```jl
-sco(
-"""
-rand(my_seed, 3)
-"""
-)
+sco("rand(my_seed, 3)")
 ```
 
 ```jl
-sco(
-"""
-rand(my_seed, 3)
-"""
-)
+sco("rand(my_seed, 3)")
 ```
 
 > **_NOTE:_**
-> If you want your code to be reproducible you can just call `Random.seed!` in the beggining of your script.
+> If you want your code to be reproducible you can just call `seed!` in the beginning of your script.
 > This will take care of reproducibility in sequential `Random` operations.
 > No need to use it all `rand` and `randn` usage.
 
 ### Downloads {#sec:downloads}
 
-One last thing from Julia's standard library for us to cover is the `Download` module.
+One last thing from Julia's standard library for us to cover is the **`Download` module**.
 It will be really brief because we will only be covering a single function named `download`.
 
 Suppose you want to **download a file from the internet to your local storage**.
@@ -2500,35 +2279,33 @@ The first and only required argument is the file's url.
 You can also specify as a second argument the desired output path for the downloaded file (don't forget the filesystem best practices!).
 If you don't specify a second argument, Julia will, by default, create a temporary file with the `tempfile` function.
 
-Let's import the `Download` module:
+Let's load the `download` method:
 
 ```julia
-using Download
+using Download: download
 ```
 
-For example let's download our [`JuliaDataScience` GitHub repository](https://github.com/JuliaDataScience/JuliaDataScience) `Project.toml` file.
+For example, let's download our [`JuliaDataScience` GitHub repository](https://github.com/JuliaDataScience/JuliaDataScience) `Project.toml` file.
 Note that `download` function is not exported by `Downloads` module, so we have to use the `Module.function` syntax.
-By default it returns a string that holds the file path for the downloaded file:
+By default, it returns a string that holds the file path for the downloaded file:
 
 ```jl
-scob(
-"""
-url = "https://raw.githubusercontent.com/JuliaDataScience/JuliaDataScience/main/Project.toml"
+s = """
+    url = "https://raw.githubusercontent.com/JuliaDataScience/JuliaDataScience/main/Project.toml"
 
-my_file = Downloads.download(url) # tempfile() being created
-"""
-)
+    my_file = Downloads.download(url) # tempfile() being created
+    """
+scob(s)
 ```
 
-Let's just show the first 4 lines of our downloaded file with the `readlines` function:
+With `readlines`, we can look at the first 4 lines of our downloaded file:
 
 ```jl
-sco(
-"""
-readlines(my_file)[1:4]
-"""; process=catch_show
-)
+s = """
+    readlines(my_file)[1:4]
+    """
+sco(s; process=catch_show)
 ```
 
 > **_NOTE:_**
-> If you want to interact with web requests or web APIs, you would probably need to use the [`HTTP.jl` package](https://github.com/JuliaWeb/HTTP.jl).
+> For more complex HTTP interactions such as interacting with web APIs, see the [`HTTP.jl` package](https://github.com/JuliaWeb/HTTP.jl) package.

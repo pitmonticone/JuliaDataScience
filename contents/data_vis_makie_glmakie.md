@@ -3,7 +3,7 @@
 `CairoMakie.jl` supplies all our needs for static 2D images.
 But sometimes we want interactivity, especially when we are dealing with 3D images.
 Visualizing data in 3D is also a common practice to gain insight from your data.
-This is where `GLMakie.jl` might be helpful, since it uses OpenGL as a backend that adds interactivity and responsiveness to plots.
+This is where `GLMakie.jl` might be helpful, since it uses [OpenGL](http://www.opengl.org/) as a backend that adds interactivity and responsiveness to plots.
 Like before, a simple plot includes, of course, lines and points. So, we will start with those and since we already know how layouts work, we will put that into practice.
 
 ### Scatters and Lines
@@ -73,7 +73,7 @@ Not bad, right? From there is clear that  any `heatmap`'s, `contour`'s, `contour
 ### Arrows and Streamplots
 
 `arrows` and `streamplot` are plots that might be useful when we want to know the directions that a given variable will follow.
-See a demonstration below:
+See a demonstration below^[we are using the `LinearAlgebra` module from Julia's standard library.]:
 
 ```
 using LinearAlgebra
@@ -109,13 +109,47 @@ Taking as reference the previous example one can do the following custom plot wi
 using GeometryBasics, Colors
 ```
 
+For the spheres let's do a rectangular grid. Also, we will use a different color for each one of them.
+Additionally, we can mix spheres and a rectangular plane. Next, we define all the necessary data.
+
+```jl
+sc("""
+seed!(123)
+spheresGrid = [Point3f(i,j,k) for i in 1:2:10 for j in 1:2:10 for k in 1:2:10]
+colorSphere = [RGBA(i * 0.1, j * 0.1, k * 0.1, 0.75) for i in 1:2:10 for j in 1:2:10 for k in 1:2:10]
+spheresPlane = [Point3f(i,j,k) for i in 1:2.5:20 for j in 1:2.5:10 for k in 1:2.5:4]
+cmap = get(colorschemes[:plasma], LinRange(0, 1, 50))
+colorsPlane = cmap[rand(1:50,50)]
+rectMesh = FRect3D(Vec3f(-1, -1, 2.1), Vec3f(22, 11, 0.5))
+recmesh = GeometryBasics.mesh(rectMesh)
+colors = [RGBA(rand(4)...) for v in recmesh.position]
+""")
+```
+
+Then, the plot is simply done with:
+
 ```jl
 @sco JDS.grid_spheres_and_rectangle_as_plate()
 ```
 
 Here, the rectangle is semi-transparent due to the alpha channel added to the RGB color.
 The rectangle function is quite versatile, for instance  3D boxes are easy do implement which in turn could be used for plotting a 3D histogram.
-See our next example:
+See our next example, where we are using again our `peaks` function and some additional definitions:
+
+```jl
+sc("""
+x, y, z = peaks(; n=15)
+δx = (x[2] - x[1]) / 2
+δy = (y[2] - y[1]) / 2
+cbarPal = :Spectral_11
+ztmp = (z .- minimum(z)) ./ (maximum(z .- minimum(z)))
+cmap = get(colorschemes[cbarPal], ztmp)
+cmap2 = reshape(cmap, size(z))
+ztmp2 = abs.(z) ./ maximum(abs.(z)) .+ 0.15
+""")
+```
+
+here $\delta x, \delta y$ are used to specified our boxes size. `cmap2` will be the color for each box and `ztmp2` will be used as a transparency parameter. See the output in the next figure.
 
 ```jl
 @sco JDS.histogram_or_bars_in_3d()
@@ -133,4 +167,3 @@ For our last example we will show how to do a filled curve in 3D with `band` and
 
 Finally, our journey doing 3D plots has come to an end.
 You can combine everything we exposed here to create amazing 3D images!
-Now, it's time to dig into the basic rules to create animations.
